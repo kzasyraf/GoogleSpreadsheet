@@ -1,8 +1,9 @@
-const deploymentId = "AKfycbzumH1Be0mQXrm3hkRFH8TCqSD9WuboguC6gXRFqVJg78B7QcGlwUq3FFdb98MpJhMV"
+const deploymentId = "AKfycbyjDacz6vpgDObKexG7TuQeToKBXdxK2CLJCqXvjVIpfIyGdygDA5vnga5BTOuM751L"
 const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
 
 function getData() {
     const response = fetch(apiUrl, {
+        cache: "no-cache",
         headers: {
             "Accept": "application/json",
             "Accept-Encoding": "gzip, deflate, br",
@@ -18,13 +19,15 @@ function getData() {
 
 async function postData() {
     const data = {
-        status: "POST",
-        data: []
-    }
+        "First Name": "My Name",
+        "Last Name": "is John",
+        "Application": "google",
+        "Date": "2023-12-20T17:39:48.833Z"
+    };
     let response = await fetch(apiUrl, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
-        //cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
         headers: {
           "Accept": "application/json",
           "Accept-Encoding": "gzip, deflate, br",
