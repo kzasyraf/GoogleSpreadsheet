@@ -40,18 +40,17 @@ async function postData(data) {
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
-    const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-        keyboard: false
-    });
+    const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
     const myToggle = document.getElementById('doPost');
 
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
             if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
+                event.preventDefault();
+                event.stopPropagation();
             } else {
+                event.preventDefault();
                 var inputName = document.getElementById('inputName');
                 var inputAttendance = document.getElementById('inputAttendance');
                 var inputWished = document.getElementById('inputWished');
@@ -60,13 +59,9 @@ async function postData(data) {
                     attendance: inputAttendance.value,
                     wished: inputWished.value
                 });
-                inputName.value = '';
-                inputAttendance.selectedIndex = 0;
-                inputWished.value = '';
                 myModal.show(myToggle);
             }
-
             form.classList.add('was-validated')
         }, false)
-    })
+    });
 })()
