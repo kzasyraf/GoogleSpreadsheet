@@ -32,6 +32,7 @@ async function postData(data) {
     })
         .then(d => (d.ok || d.redirected) ? d.json() : '')
         .then(d => (d.status === 201) ? true : false);
+    return response;
 }
 
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -46,20 +47,21 @@ async function postData(data) {
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
+            event.preventDefault();
             if (!form.checkValidity()) {
-                event.preventDefault();
                 event.stopPropagation();
             } else {
-                event.preventDefault();
                 var inputName = document.getElementById('inputName');
                 var inputAttendance = document.getElementById('inputAttendance');
                 var inputWished = document.getElementById('inputWished');
-                postData({
+                var post = postData({
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.value
                 });
-                myModal.show(myToggle);
+                if(post) {
+                    (inputAttendance.value === 'attending') ? myModal.show(myToggle) : location.reload();
+                }
             }
             form.classList.add('was-validated')
         }, false)
