@@ -1,4 +1,4 @@
-const deploymentId = "AKfycbw7m5wO_6Gq65qyTfAuZxzFn-0V6IsmHjBxQLYx9uk0mM2XuoAtKQ-Gzwb0oZO-ZdcD"
+const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4"
 const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
 
 function getData() {
@@ -17,8 +17,8 @@ function getData() {
         });
 }
 
-async function postData(data) {
-    let response = await fetch(apiUrl, {
+async function postData(table, data) {
+    let response = await fetch(apiUrl + "?table=" + table, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -41,29 +41,34 @@ async function postData(data) {
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
-    const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
-    const myToggle = document.getElementById('doPost');
-
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
+        const viewModal = new bootstrap.Modal(document.getElementById(form.id + '_modal'), {});
         form.addEventListener('submit', event => {
             event.preventDefault();
             if (!form.checkValidity()) {
                 event.stopPropagation();
             } else {
-                var inputName = document.getElementById('inputName');
-                var inputAttendance = document.getElementById('inputAttendance');
-                var inputWished = document.getElementById('inputWished');
-                var post = postData({
+                const inputName = document.getElementById(form.id + '_name');
+                const inputAttendance = document.getElementById(form.id + '_attendance');
+                const inputWished = document.getElementById(form.id + '_wished');
+                const inputSubmit = document.getElementById(form.id + '_submit');
+                var post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.value
                 });
                 if(post) {
-                    (inputAttendance.value === 'attending') ? myModal.show(myToggle) : location.reload();
+                    (inputAttendance.value === 'attending') ? viewModal.show(inputSubmit) : location.reload();
                 }
             }
-            form.classList.add('was-validated')
-        }, false)
+            form.classList.add('was-validated');
+        }, false);
+
+        const inputClose = document.getElementById(`${form.id + '_modal_close'}`);
+        inputClose.addEventListener('click', event => {
+            // Refresh the page and bypass the cache
+            location.reload(true);
+        }, false);
     });
 })()
