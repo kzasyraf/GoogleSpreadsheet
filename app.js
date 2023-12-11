@@ -43,24 +43,37 @@ async function postData(table, data) {
     const forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
-        const viewModal = new bootstrap.Modal(document.getElementById(form.id + '_modal'), {});
+        const inputName = document.getElementById(form.id + '_name');
+        const inputAttendance = document.getElementById(form.id + '_attendance');
+        const inputWished = document.getElementById(form.id + '_wished');
+        const inputSubmit = document.getElementById(form.id + '_submit');
+
+        const elementToast = document.getElementById(form.id + '_toast');
+        const bootstrapToast = bootstrap.Toast.getOrCreateInstance(elementToast);
+
+        const elementModal = document.getElementById(form.id + '_modal');
+        const bootstrapModal = new bootstrap.Modal(elementModal, {});
+
+        elementModal.addEventListener('show.bs.modal', event => {
+            const listBody = elementModal.querySelector('div.modal-body > ul');
+            if(inputAttendance.value !== 'attending') {
+                while(listBody.firstChild) {
+                    listBody.removeChild(listBody.firstChild);
+                }
+            }
+        }, false);
+
         form.addEventListener('submit', event => {
             event.preventDefault();
             if (!form.checkValidity()) {
                 event.stopPropagation();
             } else {
-                const inputName = document.getElementById(form.id + '_name');
-                const inputAttendance = document.getElementById(form.id + '_attendance');
-                const inputWished = document.getElementById(form.id + '_wished');
-                const inputSubmit = document.getElementById(form.id + '_submit');
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.value
                 });
-                if(post) {
-                    (inputAttendance.value === 'attending') ? viewModal.show(inputSubmit) : location.reload();
-                }
+                (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
             }
             form.classList.add('was-validated');
         }, false);
