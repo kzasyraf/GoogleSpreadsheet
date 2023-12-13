@@ -1,5 +1,5 @@
-const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4"
-const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
+import config from './config.json' assert { type: "json" };
+const apiUrl = "https://script.google.com/macros/s/" + config.deploymentId + "/exec";
 
 function getData() {
     const response = fetch(apiUrl, {
@@ -45,7 +45,7 @@ async function postData(table, data) {
     Array.from(forms).forEach(form => {
         const inputName = document.getElementById(form.id + '_name');
         const inputAttendance = document.getElementById(form.id + '_attendance');
-        const inputWished = document.getElementById(form.id + '_wished');
+        let inputWished = document.getElementById(form.id + '_wished');
         const inputSubmit = document.getElementById(form.id + '_submit');
 
         const elementToast = document.getElementById(form.id + '_toast');
@@ -55,11 +55,11 @@ async function postData(table, data) {
         const bootstrapModal = new bootstrap.Modal(elementModal, {});
 
         elementModal.addEventListener('show.bs.modal', event => {
-            const listBody = elementModal.querySelector('div.modal-body > ul');
+            const listBody = elementModal.querySelectorAll('.list-unstyled');
             if(inputAttendance.value !== 'attending') {
-                while(listBody.firstChild) {
-                    listBody.removeChild(listBody.firstChild);
-                }
+                listBody.forEach((e) => {
+                    e.remove();
+                });
             }
         }, false);
 
@@ -83,5 +83,15 @@ async function postData(table, data) {
             // Refresh the page and bypass the cache
             location.reload(true);
         }, false);
+
+        BalloonEditor.create( 
+            document.querySelector('#' + form.id + '_wished'), {
+                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ]
+            }
+        ).then( editor => {
+            inputWished = editor
+        }).catch( error => {
+			console.error( error );
+		} );
     });
 })()
