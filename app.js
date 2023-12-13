@@ -43,11 +43,11 @@ async function postData(table, data) {
     const forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
-
-        const elementToast = document.getElementById(form.id + '_toast');
+        console.log(`${form.id}_submit`);
+        const elementToast = document.getElementById(`${form.id}_toast`);
         const bootstrapToast = bootstrap.Toast.getOrCreateInstance(elementToast);
 
-        const elementModal = document.getElementById(form.id + '_modal');
+        const elementModal = document.getElementById(`${form.id}_modal`);
         const bootstrapModal = new bootstrap.Modal(elementModal, {});
 
         elementModal.addEventListener('show.bs.modal', event => {
@@ -68,10 +68,10 @@ async function postData(table, data) {
             form.classList.add('was-validated');
         }, false);
 
-        const inputName = document.getElementById(form.id + '_name');
-        const inputAttendance = document.getElementById(form.id + '_attendance');
-        const inputWished = document.getElementById(form.id + '_wished');
-        const inputSubmit = document.getElementById(form.id + '_submit');
+        const inputName = document.getElementById(`${form.id}_name`);
+        const inputAttendance = document.getElementById(`${form.id}_attendance`);
+        const inputWished = document.getElementById(`${form.id}_wished`);
+        const inputSubmit = document.getElementById(`${form.id}_submit`);
         inputSubmit.addEventListener('click', event => {
             if(form.checkValidity()){
                 event.preventDefault();
@@ -86,7 +86,7 @@ async function postData(table, data) {
             }
         }, false);
 
-        const inputClose = document.getElementById(`${form.id + '_modal_close'}`);
+        const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
             if(form.checkValidity()){
                 event.preventDefault();
