@@ -43,10 +43,6 @@ async function postData(table, data) {
     const forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
-        const inputName = document.getElementById(form.id + '_name');
-        const inputAttendance = document.getElementById(form.id + '_attendance');
-        const inputWished = document.getElementById(form.id + '_wished');
-        const inputSubmit = document.getElementById(form.id + '_submit');
 
         const elementToast = document.getElementById(form.id + '_toast');
         const bootstrapToast = bootstrap.Toast.getOrCreateInstance(elementToast);
@@ -64,10 +60,22 @@ async function postData(table, data) {
         }, false);
 
         form.addEventListener('submit', event => {
-            event.preventDefault();
             if (!form.checkValidity()) {
+                event.preventDefault();
                 event.stopPropagation();
-            } else {
+                form.classList.add('invalid');
+            }
+            form.classList.add('was-validated');
+        }, false);
+
+        const inputName = document.getElementById(form.id + '_name');
+        const inputAttendance = document.getElementById(form.id + '_attendance');
+        const inputWished = document.getElementById(form.id + '_wished');
+        const inputSubmit = document.getElementById(form.id + '_submit');
+        inputSubmit.addEventListener('click', event => {
+            if(form.checkValidity()){
+                event.preventDefault();
+                form.classList.remove('invalid');
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
@@ -75,7 +83,6 @@ async function postData(table, data) {
                 });
                 (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
             }
-            form.classList.add('was-validated');
         }, false);
 
         const inputClose = document.getElementById(`${form.id + '_modal_close'}`);
@@ -84,19 +91,4 @@ async function postData(table, data) {
             location.reload(true);
         }, false);
     });
-
-    function hasHtml5Validation () {
-		return typeof document.createElement('input').checkValidity === 'function';
-	}
-
-	if (hasHtml5Validation()) {
-		forms.submit(function (e) {
-		if (!this.checkValidity()) {
-			e.preventDefault();
-			$(this).addClass('invalid');
-		} else {
-			$(this).removeClass('invalid');
-		}
-		});
-	}
 })()
