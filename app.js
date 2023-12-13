@@ -63,6 +63,16 @@ async function postData(table, data) {
             }
         }, false);
 
+        BalloonEditor.create( 
+            document.querySelector('#' + form.id + '_wished'), {
+                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ]
+            }
+        ).then( editor => {
+            inputWished = editor
+        }).catch( error => {
+			console.error( error );
+		});
+
         form.addEventListener('submit', event => {
             event.preventDefault();
             if (!form.checkValidity()) {
@@ -71,7 +81,7 @@ async function postData(table, data) {
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
-                    wished: inputWished.value
+                    wished: inputWished.getData()
                 });
                 (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
             }
@@ -83,15 +93,5 @@ async function postData(table, data) {
             // Refresh the page and bypass the cache
             location.reload(true);
         }, false);
-
-        BalloonEditor.create( 
-            document.querySelector('#' + form.id + '_wished'), {
-                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ]
-            }
-        ).then( editor => {
-            inputWished = editor
-        }).catch( error => {
-			console.error( error );
-		} );
     });
 })()
