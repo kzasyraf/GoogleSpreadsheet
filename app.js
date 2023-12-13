@@ -45,7 +45,7 @@ async function postData(table, data) {
     Array.from(forms).forEach(form => {
         const inputName = document.getElementById(form.id + '_name');
         const inputAttendance = document.getElementById(form.id + '_attendance');
-        let inputWished = document.getElementById(form.id + '_wished');
+        const inputWished = document.getElementById(form.id + '_wished');
         const inputSubmit = document.getElementById(form.id + '_submit');
 
         const elementToast = document.getElementById(form.id + '_toast');
@@ -63,16 +63,6 @@ async function postData(table, data) {
             }
         }, false);
 
-        BalloonEditor.create( 
-            document.querySelector('#' + form.id + '_wished'), {
-                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ]
-            }
-        ).then( editor => {
-            inputWished = editor
-        }).catch( error => {
-			console.error( error );
-		});
-
         form.addEventListener('submit', event => {
             event.preventDefault();
             if (!form.checkValidity()) {
@@ -81,7 +71,7 @@ async function postData(table, data) {
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
-                    wished: inputWished.getData()
+                    wished: inputWished.value
                 });
                 (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
             }
