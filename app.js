@@ -75,6 +75,7 @@ async function postData(table, data) {
         inputSubmit.addEventListener('click', event => {
             if(form.checkValidity()){
                 event.preventDefault();
+                event.stopPropagation();
                 form.classList.remove('invalid');
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
@@ -87,8 +88,11 @@ async function postData(table, data) {
 
         const inputClose = document.getElementById(`${form.id + '_modal_close'}`);
         inputClose.addEventListener('click', event => {
-            // Refresh the page and bypass the cache
-            location.reload(true);
+            if(form.checkValidity()){
+                event.preventDefault();
+                event.stopPropagation();
+                location.reload(true);
+            }
         }, false);
     });
 })()
