@@ -63,6 +63,7 @@ async function postData(table, data) {
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('invalid');
+                bootstrapToast.show();
             }
             form.classList.add('was-validated');
         }, false);
