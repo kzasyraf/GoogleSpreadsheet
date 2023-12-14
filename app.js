@@ -1,12 +1,42 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
-(async () => {
+(() => {
     'use strict'
-    const { default: config } = await import("./config.json", {
-        assert: {
-          type: "json",
-        },
-    });
-    const apiUrl = "https://script.google.com/macros/s/" + config.deploymentId + "/exec"
+    const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
+    const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec"
+
+    let getData = () => {
+        const response = fetch(apiUrl, {
+            cache: "no-cache",
+            headers: {
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            },
+            redirect: "follow",
+        })
+        .then(d => d.ok ? d.json() : '')
+        .then(d => {
+            document.getElementById('app').textContent = d.status;
+        });
+    };
+
+    let postData = async (table, data) => {
+        let response = await fetch(apiUrl + "?table=" + table, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            headers: {
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            },
+            redirect: "follow", // manual, *follow, error
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        })
+        .then(d => (d.ok || d.redirected) ? d.json() : '')
+        .then(d => (d.status === 201) ? true : false);
+        return response;
+    };
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
@@ -33,39 +63,6 @@
         const inputSubmit = document.getElementById(`${form.id}_submit`);
         const inputSubmitSpinner = document.getElementById(`${form.id}_submit_spinner`);
         const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
-        function getData() {
-            const response = fetch(apiUrl, {
-                cache: "no-cache",
-                headers: {
-                    "Accept": "application/json",
-                    "Accept-Encoding": "gzip, deflate, br",
-                    "Connection": "keep-alive"
-                },
-                redirect: "follow",
-            })
-            .then(d => d.ok ? d.json() : '')
-            .then(d => {
-                document.getElementById('app').textContent = d.status;
-            });
-        }
-    
-        async function postData(table, data) {
-            let response = await fetch(apiUrl + "?table=" + table, {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                mode: "cors", // no-cors, *cors, same-origin
-                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                headers: {
-                    "Accept": "application/json",
-                    "Accept-Encoding": "gzip, deflate, br",
-                    "Connection": "keep-alive"
-                },
-                redirect: "follow", // manual, *follow, error
-                body: JSON.stringify(data) // body data type must match "Content-Type" header
-            })
-            .then(d => (d.ok || d.redirected) ? d.json() : '')
-            .then(d => (d.status === 201) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show());
-            return response;
-        }
 
         inputSubmit.addEventListener('click', event =>{
             if(form.checkValidity()) {
@@ -77,7 +74,7 @@
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
-                });
+                }).then( d => (d === true) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show());
             }
         }, false);
 
