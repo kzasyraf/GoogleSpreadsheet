@@ -1,9 +1,12 @@
-const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
-const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
-
 // Example starter JavaScript for disabling form submissions if there are invalid fields
-(() => {
+(async () => {
     'use strict'
+    const { default: config } = await import("./config.json", {
+        assert: {
+          type: "json",
+        },
+    });
+    const apiUrl = "https://script.google.com/macros/s/" + config.deploymentId + "/exec"
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
