@@ -66,19 +66,18 @@ async function postData(table, data) {
             if(!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-                form.classList.add('invalid');
             } else {
                 event.preventDefault();
+                event.stopPropagation();
                 const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.value
                 });
                 (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
-                form.classList.remove('invalid');
             }
             form.classList.add('was-validated');
-        }, false);
+        }, true);
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {

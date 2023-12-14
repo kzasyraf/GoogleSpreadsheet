@@ -84,31 +84,3 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important;
 }
-
-/* Start - Infusionsoft Generated Web Form CSS Needed For Required Field Validation, custom code for WebKit (iOS & OSX) incomplete HTML5 validation support */
-
-form#male_guest input:invalid, form#female_guest input:invalid {
-	outline:none; /* Removes default red rectangle :invalid styling in IE & Edge, which competes with the new :invalid border styling */
-}
-form#male_guest input:required:focus:invalid, form#female_guest input:required:focus:invalid { /* Shows red border only on :invalid fields with focus */
-	border-color:#FF0000;
-	border-width:2px;
-	border-style:solid;
-}
-form#male_guest input:required:valid, form#female_guest input:required:valid { /* Shows green border on all :valid fields regardless of focus */
-	border-color:#669e00;
-	border-width:2px;
-	border-style:solid;
-}
-.invalid input:required:invalid { /* iOS & OSX, shows red border on all :invalid fields regardless of focus */
-	border-color:#FF0000;
-	border-width:2px;
-	border-style:solid;
-}
-.invalid input:required:valid { /* iOS & OSX, shows green border on all :valid fields regardless of focus */
-	border-color:#669e00;
-	border-width:2px;
-	border-style:solid;
-}
-
-/* End - Infusionsoft CSS  */
