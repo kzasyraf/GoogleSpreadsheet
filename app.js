@@ -28,6 +28,8 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
         const inputName = document.getElementById(`${form.id}_name`);
         const inputAttendance = document.getElementById(`${form.id}_attendance`);
         const inputSubmit = document.getElementById(`${form.id}_submit`);
+        const inputSubmitSpinner = document.getElementById(`${form.id}_submit_spinner`);
+        const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
         function getData() {
             const response = fetch(apiUrl, {
                 cache: "no-cache",
@@ -65,6 +67,9 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
         inputSubmit.addEventListener('click', event =>{
             if(form.checkValidity()) {
                 event.preventDefault();
+                inputSubmit.disabled = true;
+                inputSubmitSpinner.classList.remove('d-none');
+                inputSubmitText.innerText = 'Menghantar';
                 const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
@@ -85,6 +90,8 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
         inputClose.addEventListener('click', event => {
             if(form.checkValidity()) {
                 event.preventDefault();
+                inputSubmitSpinner.classList.remove('d-none');
+                inputSubmitText.innerText = 'Hantar';
                 location.reload(true);
             }
         }, false);

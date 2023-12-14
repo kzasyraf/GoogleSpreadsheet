@@ -208,7 +208,10 @@
           <div class="form-control border rounded" id="female_guest_wished" rows="3" required></div>
         </div>
         <div class="row mb-3 justify-content-center">
-          <button id="female_guest_submit" type="submit" class="btn btn-primary">Hantar</button>
+          <button id="female_guest_submit" class="btn btn-primary" type="submit">
+            <span id="female_guest_submit_spinner" class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+            <span id="female_guest_submit_text" role="status">Hantar</span>
+          </button>
         </div>
       </form>
     </div>
