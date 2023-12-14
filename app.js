@@ -17,8 +17,8 @@ function getData() {
         });
 }
 
-function postData(table, data) {
-    let response = fetch(apiUrl + "?table=" + table, {
+async function postData(table, data) {
+    let response = await fetch(apiUrl + "?table=" + table, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -32,7 +32,7 @@ function postData(table, data) {
     })
         .then(d => (d.ok || d.redirected) ? d.json() : '')
         .then(d => (d.status === 201) ? true : false);
-    return response;
+    return response || false;
 }
 
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -75,7 +75,7 @@ function postData(table, data) {
             if(form.checkValidity()){
                 event.preventDefault();
                 form.classList.remove('invalid');
-                var post = postData(form.id + '_table', {
+                const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.value
