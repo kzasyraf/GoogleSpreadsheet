@@ -68,6 +68,7 @@ async function postData(table, data) {
                 event.stopPropagation();
                 form.classList.add('invalid');
             } else {
+                event.preventDefault();
                 const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
