@@ -21,7 +21,6 @@
     };
 
     let postData = async (table, data) => {
-        data = {};
         let response = await fetch(apiUrl + "?table=" + table, {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "cors", // no-cors, *cors, same-origin
@@ -95,14 +94,18 @@
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
                 })
-                .then(d => (d === true) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show())
-                .then(() => {
+                .then(d => {
+                    if(d === false){
+                        bootstrapToast.show()
                         inputName.disabled = false;
                         inputAttendance.disabled = false;
                         inputWished.disableReadOnlyMode('my-feature-id');
                         inputSubmit.disabled = false;
                         inputSubmitSpinner.classList.add('d-none');
                         inputSubmitText.innerText = 'Hantar';
+                    } else {
+                        bootstrapModal.show(inputSubmit)
+                    }
                 });
             }
         }, false);
