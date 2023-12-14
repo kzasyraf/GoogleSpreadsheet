@@ -58,29 +58,26 @@ async function postData(table, data) {
             }
         }, false);
 
+        const inputName = document.getElementById(`${form.id}_name`);
+        const inputAttendance = document.getElementById(`${form.id}_attendance`);
+        const inputWished = document.getElementById(`${form.id}_wished`);
+        const inputSubmit = document.getElementById(`${form.id}_submit`);
         form.addEventListener('submit', event => {
             if(!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('invalid');
             } else {
+                const post = postData(form.id + '_table', {
+                    name: inputName.value,
+                    attendance: inputAttendance.value,
+                    wished: inputWished.value
+                });
+                (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
                 form.classList.remove('invalid');
             }
             form.classList.add('was-validated');
         }, false);
-
-        const inputName = document.getElementById(`${form.id}_name`);
-        const inputAttendance = document.getElementById(`${form.id}_attendance`);
-        const inputWished = document.getElementById(`${form.id}_wished`);
-        const inputSubmit = document.getElementById(`${form.id}_submit`);
-        inputSubmit.addEventListener('click', event => {
-            const post = postData(form.id + '_table', {
-                name: inputName.value,
-                attendance: inputAttendance.value,
-                wished: inputWished.value
-            });
-            (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
-        }, true);
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
