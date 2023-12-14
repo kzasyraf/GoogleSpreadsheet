@@ -17,8 +17,8 @@ function getData() {
         });
 }
 
-async function postData(table, data) {
-    let response = await fetch(apiUrl + "?table=" + table, {
+function postData(table, data) {
+    let response = fetch(apiUrl + "?table=" + table, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -43,7 +43,6 @@ async function postData(table, data) {
     const forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
-        console.log(`${form.id}_submit`);
         const elementToast = document.getElementById(`${form.id}_toast`);
         const bootstrapToast = bootstrap.Toast.getOrCreateInstance(elementToast);
 
@@ -60,7 +59,7 @@ async function postData(table, data) {
         }, false);
 
         form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
+            if(!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('invalid');
@@ -75,7 +74,6 @@ async function postData(table, data) {
         inputSubmit.addEventListener('click', event => {
             if(form.checkValidity()){
                 event.preventDefault();
-                event.stopPropagation();
                 form.classList.remove('invalid');
                 var post = postData(form.id + '_table', {
                     name: inputName.value,
@@ -84,13 +82,12 @@ async function postData(table, data) {
                 });
                 (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
             }
-        }, false);
+        }, true);
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
             if(form.checkValidity()){
                 event.preventDefault();
-                event.stopPropagation();
                 location.reload(true);
             }
         }, false);
