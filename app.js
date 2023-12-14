@@ -24,9 +24,9 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
             }
         }, false);
 
+        let inputWished = document.getElementById(`${form.id}_wished`);
         const inputName = document.getElementById(`${form.id}_name`);
         const inputAttendance = document.getElementById(`${form.id}_attendance`);
-        const inputWished = document.getElementById(`${form.id}_wished`);
         const inputSubmit = document.getElementById(`${form.id}_submit`);
         function getData() {
             const response = fetch(apiUrl, {
@@ -38,10 +38,10 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
                 },
                 redirect: "follow",
             })
-                .then(d => d.ok ? d.json() : '')
-                .then(d => {
-                    document.getElementById('app').textContent = d.status;
-                });
+            .then(d => d.ok ? d.json() : '')
+            .then(d => {
+                document.getElementById('app').textContent = d.status;
+            });
         }
     
         async function postData(table, data) {
@@ -57,8 +57,8 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
                 redirect: "follow", // manual, *follow, error
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
             })
-                .then(d => (d.ok || d.redirected) ? d.json() : '')
-                .then(d => (d.status === 201) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show());
+            .then(d => (d.ok || d.redirected) ? d.json() : '')
+            .then(d => (d.status === 201) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show());
             return response;
         }
 
@@ -68,7 +68,7 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
                 const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
-                    wished: inputWished.value
+                    wished: inputWished.getData()
                 });
             }
         }, false);
@@ -88,5 +88,20 @@ const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec";
                 location.reload(true);
             }
         }, false);
+
+        BalloonEditor.create(inputWished, {
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+                ]
+            }
+        }).then( editor => {
+            inputWished = editor
+        }).catch( error => {
+            console.error( error );
+        } );
     });
 })()
