@@ -64,9 +64,28 @@
         const inputSubmitSpinner = document.getElementById(`${form.id}_submit_spinner`);
         const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
 
+        BalloonEditor.create(inputWished, {
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+                ]
+            },
+            isReadOnly: false
+        }).then( editor => {
+            inputWished = editor
+        }).catch( error => {
+            console.error( error );
+        });
+
         inputSubmit.addEventListener('click', event =>{
             if(form.checkValidity()) {
                 event.preventDefault();
+                inputName.disabled = true;
+                inputAttendance.disabled = true;
+                inputWished.enableReadOnlyMode('my-feature-id');
                 inputSubmit.disabled = true;
                 inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Menghantar';
@@ -95,20 +114,5 @@
                 location.reload(true);
             }
         }, false);
-
-        BalloonEditor.create(inputWished, {
-            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
-            heading: {
-                options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-                ]
-            }
-        }).then( editor => {
-            inputWished = editor
-        }).catch( error => {
-            console.error( error );
-        } );
     });
 })()
