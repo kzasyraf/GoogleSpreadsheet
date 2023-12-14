@@ -63,7 +63,8 @@ async function postData(table, data) {
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('invalid');
-                bootstrapToast.show();
+            } else {
+                form.classList.remove('invalid');
             }
             form.classList.add('was-validated');
         }, false);
@@ -73,24 +74,17 @@ async function postData(table, data) {
         const inputWished = document.getElementById(`${form.id}_wished`);
         const inputSubmit = document.getElementById(`${form.id}_submit`);
         inputSubmit.addEventListener('click', event => {
-            if(form.checkValidity()){
-                event.preventDefault();
-                form.classList.remove('invalid');
-                const post = postData(form.id + '_table', {
-                    name: inputName.value,
-                    attendance: inputAttendance.value,
-                    wished: inputWished.value
-                });
-                (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
-            }
+            const post = postData(form.id + '_table', {
+                name: inputName.value,
+                attendance: inputAttendance.value,
+                wished: inputWished.value
+            });
+            (post) ? bootstrapModal.show(inputSubmit) : bootstrapToast.show();
         }, true);
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
-            if(form.checkValidity()){
-                event.preventDefault();
-                location.reload(true);
-            }
-        }, false);
+            location.reload(true);
+        }, true);
     });
 })()
