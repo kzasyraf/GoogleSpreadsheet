@@ -95,17 +95,13 @@
                     wished: inputWished.getData()
                 })
                 .then(d => {
-                    if(d === false){
-                        bootstrapToast.show()
-                        inputName.disabled = false;
-                        inputAttendance.disabled = false;
-                        inputWished.disableReadOnlyMode('my-feature-id');
-                        inputSubmit.disabled = false;
-                        inputSubmitSpinner.classList.add('d-none');
-                        inputSubmitText.innerText = 'Hantar';
-                    } else {
-                        bootstrapModal.show(inputSubmit)
-                    }
+                    (d === false) ? bootstrapToast.show() : bootstrapModal.show(inputSubmit);
+                    inputName.disabled = false;
+                    inputAttendance.disabled = false;
+                    inputWished.disableReadOnlyMode('my-feature-id');
+                    inputSubmit.disabled = false;
+                    inputSubmitSpinner.classList.add('d-none');
+                    inputSubmitText.innerText = 'Hantar';
                 });
             }
         }, false);
