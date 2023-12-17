@@ -9,8 +9,6 @@
             cache: "no-cache",
             headers: {
                 "Accept": "application/json",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive"
             },
             redirect: "follow",
         })
@@ -26,9 +24,7 @@
             mode: "cors", // no-cors, *cors, same-origin
             cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
             headers: {
-                "Accept": "application/json",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive"
+                "Accept": "application/json"
             },
             redirect: "follow", // manual, *follow, error
             body: JSON.stringify(data) // body data type must match "Content-Type" header
