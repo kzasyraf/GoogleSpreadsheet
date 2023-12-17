@@ -4,6 +4,20 @@
     const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
     const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec"
 
+    let getData = () => {
+        const response = fetch(apiUrl, {
+            cache: "no-cache",
+            headers: {
+                "Accept": "application/json",
+            },
+            redirect: "follow",
+        })
+        .then(d => d.ok ? d.json() : '')
+        .then(d => {
+            document.getElementById('app').textContent = d.status;
+        });
+    };
+
     let postData = async (table, data) => {
         let response = await fetch(apiUrl + "?table=" + table, {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -15,8 +29,8 @@
             redirect: "follow", // manual, *follow, error
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         })
-            .then(d => (d.ok || d.redirected) ? d.json() : '')
-            .then(d => (d.status === 201) ? true : false);
+        .then(d => (d.ok || d.redirected) ? d.json() : '')
+        .then(d => (d.status === 201) ? true : false);
         return response;
     };
 
@@ -32,7 +46,7 @@
 
         elementModal.addEventListener('show.bs.modal', event => {
             const listBody = elementModal.querySelectorAll('.list-unstyled');
-            if (inputAttendance.value !== 'attending') {
+            if(inputAttendance.value !== 'attending') {
                 listBody.forEach((e) => {
                     e.remove();
                 });
@@ -47,7 +61,7 @@
         const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
 
         BalloonEditor.create(inputWished, {
-            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
             heading: {
                 options: [
                     { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -56,14 +70,14 @@
                 ]
             },
             isReadOnly: false
-        }).then(editor => {
+        }).then( editor => {
             inputWished = editor
-        }).catch(error => {
-            console.error(error);
+        }).catch( error => {
+            console.error( error );
         });
 
-        inputSubmit.addEventListener('click', event => {
-            if (form.checkValidity()) {
+        inputSubmit.addEventListener('click', event =>{
+            if(form.checkValidity()) {
                 event.preventDefault();
                 inputName.disabled = true;
                 inputAttendance.disabled = true;
@@ -76,24 +90,24 @@
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
                 })
-                    .then(d => {
-                        if (d === false || d === undefined) {
-                            bootstrapToast.show();
-                            inputName.disabled = false;
-                            inputAttendance.disabled = false;
-                            inputWished.disableReadOnlyMode('my-feature-id');
-                            inputSubmit.disabled = false;
-                            inputSubmitSpinner.classList.add('d-none');
-                            inputSubmitText.innerText = 'Hantar';
-                        } else {
-                            bootstrapModal.show(inputSubmit);
-                        }
-                    });
+                .then(d => {
+                    if(d === false || d === undefined){
+                        bootstrapToast.show();
+                        inputName.disabled = false;
+                        inputAttendance.disabled = false;
+                        inputWished.disableReadOnlyMode('my-feature-id');
+                        inputSubmit.disabled = false;
+                        inputSubmitSpinner.classList.add('d-none');
+                        inputSubmitText.innerText = 'Hantar';
+                    } else {
+                        bootstrapModal.show(inputSubmit);
+                    }
+                });
             }
         }, false);
 
         form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
+            if(!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
             }
@@ -102,17 +116,11 @@
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
-            if (form.checkValidity()) {
+            if(form.checkValidity()) {
                 event.preventDefault();
-                inputName.disabled = false;
-                inputAttendance.disabled = false;
-                inputWished.disableReadOnlyMode('my-feature-id');
-                inputWished.setData('');
-                inputSubmit.disabled = false;
-                inputSubmitSpinner.classList.add('d-none');
+                inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Hantar';
-                form.reset();
-                bootstrapModal.hide();
+                location.reload(true);
             }
         }, false);
     });
