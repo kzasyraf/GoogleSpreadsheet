@@ -4,20 +4,6 @@
     const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
     const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec"
 
-    let getData = () => {
-        const response = fetch(apiUrl, {
-            cache: "no-cache",
-            headers: {
-                "Accept": "application/json",
-            },
-            redirect: "follow",
-        })
-        .then(d => d.ok ? d.json() : '')
-        .then(d => {
-            document.getElementById('app').textContent = d.status;
-        });
-    };
-
     let postData = async (table, data) => {
         let response = await fetch(apiUrl + "?table=" + table, {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
