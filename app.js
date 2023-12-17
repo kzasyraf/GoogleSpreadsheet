@@ -1,45 +1,23 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (() => {
     'use strict'
-    const deploymentId = "AKfycbxDmRJSC3dyP1SkWdd2Tq5ubi72Z1hy0w2DZJZeX-_OD8W3FRy39nE5q76R7SisFPVb";
+    const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
     const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec"
 
-    const postData = async (table, data) => {
-        const authInfo = await fetch(apiUrl + '?hub.mode=publish&hub.verify_token=a136e25f-1cb8-4d1c-af73-142c678398d0', {
-            mode: "cors",
-            cache: "no-cache",
+    let postData = async (table, data) => {
+        let response = await fetch(apiUrl + "?table=" + table, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
             headers: {
-                Accept: "application/json",
+                "Accept": "application/json"
             },
-            redirect: "follow",
+            redirect: "follow", // manual, *follow, error
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
         })
-            .then(d => d.ok ? d.json() : '')
-            .then(async (d) => {
-                if (d.status === 200) {
-                    await fetch(apiUrl + '/data?hub.table=' + table, {
-                        method: "POST", // *GET, POST, PUT, DELETE, etc.
-                        mode: "no-cors",
-                        cache: "no-cache",
-                        credentials: "include",
-                        headers: {
-                            Authorization: `${d.token_type} ${d.access_token}`,
-                            Accept: "application/json"
-                        },
-                        redirect: "follow",
-                        body: JSON.stringify(data)
-                    });
-                } else {
-                    bootstrapToast.show();
-                    inputName.disabled = false;
-                    inputAttendance.disabled = false;
-                    inputWished.disableReadOnlyMode('my-feature-id');
-                    inputSubmit.disabled = false;
-                    inputSubmitSpinner.classList.add('d-none');
-                    inputSubmitText.innerText = 'Hantar';
-                }
-            })
-            .catch(e => console.log(e));
-        return authInfo;
+        .then(d => (d.ok || d.redirected) ? d.json() : '')
+        .then(d => (d.status === 201) ? true : false);
+        return response;
     };
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -54,7 +32,7 @@
 
         elementModal.addEventListener('show.bs.modal', event => {
             const listBody = elementModal.querySelectorAll('.list-unstyled');
-            if (inputAttendance.value !== 'attending') {
+            if(inputAttendance.value !== 'attending') {
                 listBody.forEach((e) => {
                     e.remove();
                 });
@@ -69,7 +47,7 @@
         const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
 
         BalloonEditor.create(inputWished, {
-            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
             heading: {
                 options: [
                     { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -78,14 +56,14 @@
                 ]
             },
             isReadOnly: false
-        }).then(editor => {
+        }).then( editor => {
             inputWished = editor
-        }).catch(error => {
-            console.error(error);
+        }).catch( error => {
+            console.error( error );
         });
 
-        inputSubmit.addEventListener('click', event => {
-            if (form.checkValidity()) {
+        inputSubmit.addEventListener('click', event =>{
+            if(form.checkValidity()) {
                 event.preventDefault();
                 inputName.disabled = true;
                 inputAttendance.disabled = true;
@@ -93,18 +71,29 @@
                 inputSubmit.disabled = true;
                 inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Menghantar';
-                postData(form.id + '_table', {
+                const post = postData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
-                }).finally(() => {
-                    bootstrapModal.show(inputSubmit);
+                })
+                .then(d => {
+                    if(d === false || d === undefined){
+                        bootstrapToast.show();
+                        inputName.disabled = false;
+                        inputAttendance.disabled = false;
+                        inputWished.disableReadOnlyMode('my-feature-id');
+                        inputSubmit.disabled = false;
+                        inputSubmitSpinner.classList.add('d-none');
+                        inputSubmitText.innerText = 'Hantar';
+                    } else {
+                        bootstrapModal.show(inputSubmit);
+                    }
                 });
             }
         }, false);
 
         form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
+            if(!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
             }
@@ -113,17 +102,11 @@
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
-            if (form.checkValidity()) {
+            if(form.checkValidity()) {
                 event.preventDefault();
-                inputName.disabled = false;
-                inputAttendance.disabled = false;
-                inputWished.disableReadOnlyMode('my-feature-id');
-                inputWished.setData('');
-                inputSubmit.disabled = false;
-                inputSubmitSpinner.classList.add('d-none');
+                inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Hantar';
-                bootstrapModal.hide();
-                form.reset();
+                location.reload(true);
             }
         }, false);
     });
