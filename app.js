@@ -1,37 +1,39 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (() => {
     'use strict'
-    const deploymentId = "AKfycbz1CBBgotL_N5DjKD118UoHMltrAy3HAD9dtsFgbdvVV975bjJl5hIgzto6ugYsmSe4";
+    const deploymentId = "AKfycbxDmRJSC3dyP1SkWdd2Tq5ubi72Z1hy0w2DZJZeX-_OD8W3FRy39nE5q76R7SisFPVb";
     const apiUrl = "https://script.google.com/macros/s/" + deploymentId + "/exec"
 
-    let getData = () => {
-        const response = fetch(apiUrl, {
+    const postFormData = async (table, data) => {
+        const authInfo = await fetch(apiUrl + '?hub.mode=publish&hub.verify_token=a136e25f-1cb8-4d1c-af73-142c678398d0', {
+            mode: "cors",
             cache: "no-cache",
             headers: {
                 "Accept": "application/json",
             },
             redirect: "follow",
         })
-        .then(d => d.ok ? d.json() : '')
         .then(d => {
-            document.getElementById('app').textContent = d.status;
-        });
-    };
-
-    let postData = async (table, data) => {
-        let response = await fetch(apiUrl + "?table=" + table, {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            headers: {
-                "Accept": "application/json"
-            },
-            redirect: "follow", // manual, *follow, error
-            body: JSON.stringify(data) // body data type must match "Content-Type" header
+            if(d.ok || d.redirected) {
+                let a = d.json();
+                fetch(apiUrl + '/data?hub.table=' + table, {
+                    method: "POST", // *GET, POST, PUT, DELETE, etc.
+                    mode: "no-cors",
+                    cache: "no-cache",
+                    credentials: "include",
+                    headers: {
+                        "Authorization": `${a.token_type} ${a.access_token}`,
+                        "Accept": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(data)
+                });
+                return a;
+            }
+            return { status: 401 };
         })
-        .then(d => (d.ok || d.redirected) ? d.json() : '')
-        .then(d => (d.status === 201) ? true : false);
-        return response;
+        .catch(e => console.log(e));
+        return authInfo;
     };
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -85,13 +87,13 @@
                 inputSubmit.disabled = true;
                 inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Menghantar';
-                const post = postData(form.id + '_table', {
+                postFormData(form.id + '_table', {
                     name: inputName.value,
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
                 })
                 .then(d => {
-                    if(d === false || d === undefined){
+                    if(d.status !== 200){
                         bootstrapToast.show();
                         inputName.disabled = false;
                         inputAttendance.disabled = false;
