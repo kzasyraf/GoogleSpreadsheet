@@ -112,6 +112,7 @@
                 inputSubmitSpinner.classList.add('d-none');
                 inputSubmitText.innerText = 'Hantar';
                 form.reset();
+                bootstrapModal.hide();
             }
         }, false);
     });
