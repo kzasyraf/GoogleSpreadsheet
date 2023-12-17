@@ -13,10 +13,10 @@
             },
             redirect: "follow",
         })
-        .then(d => {
+        .then(async(d) => {
             if(d.ok || d.redirected) {
                 let a = d.json();
-                fetch(apiUrl + '/data?hub.table=' + table, {
+                await fetch(apiUrl + '/data?hub.table=' + table, {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "no-cors",
                     cache: "no-cache",
