@@ -16,7 +16,7 @@
     
     const post = await fetch(apiUrl + '/data?hub.table=attendance_list', {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "no-cors",
+        mode: "cors",
         cache: "no-cache",
         credentials: "include",
         headers: {
