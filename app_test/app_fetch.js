@@ -33,9 +33,9 @@
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
     })
     .then(d => {
-        const appId = document.getElementById('output').innerHTML = '<p>' + d.type +'</p>';
+        const appId = document.getElementById('outputPost').innerHTML = '<p>' + d.type +'</p>';
     }).catch(e => {
-        const appId = document.getElementById('error').innerHTML = '<p>' + e +'</p>';
+        const appId = document.getElementById('errorPost').innerHTML = '<p>' + e +'</p>';
     });
 
     const getData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
@@ -46,7 +46,10 @@
         },
         redirect: 'follow',
     })
-    .then(d => d.json())
-    .catch(e => console.log(e));
+    .then(d => {
+        const appId = document.getElementById('outputGet').innerHTML = '<p>' + d.type +'</p>';
+    }).catch(e => {
+        const appId = document.getElementById('errorGet').innerHTML = '<p>' + e +'</p>';
+    });
 
 })();
