@@ -13,6 +13,7 @@
                 "Accept": "application/json"
             },
             redirect: "follow", // manual, *follow, error
+            keepalive: true,
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         })
         .then(d => (d.ok || d.redirected) ? d.json() : '')
