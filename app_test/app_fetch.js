@@ -18,7 +18,7 @@
     
     const post = await fetch(apiUrl + '/data?hub.table=attendance_list', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'no-cors', // change to cors when publish to github
+        mode: 'cors', // change to cors when publish to github
         cache: 'no-cache',
         credentials: 'include',
         headers: {
@@ -27,9 +27,9 @@
             'Content-Type': 'application/json'
         },
         redirect: 'follow',
-        referrer: '',
-        referrerPolicy: 'origin-when-cross-origin',
         keepalive: true,
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
-    }).then(d => d.type);
+    })
+    .then(d => d.type)
+    .catch(e => console.log(e));
 })();
