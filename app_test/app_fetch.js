@@ -32,9 +32,11 @@
         referrerPolicy: 'origin-when-cross-origin',
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
     })
-    .then(d => d.json())
-    .catch(e => console.log(e));
-    console.log(postData);
+    .then(d => {
+        const appId = document.getElementById('output').innerHTML = '<p>' + d.type +'</p>';
+    }).catch(e => {
+        const appId = document.getElementById('error').innerHTML = '<p>' + e +'</p>';
+    });
 
     const getData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
         mode: 'cors',
