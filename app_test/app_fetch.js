@@ -13,10 +13,12 @@
     })
     .then(d => d.json())
     .catch(e => console.log(e));
+
+    console.log('fetch: ' + authInfo);
     
     const post = await fetch(apiUrl + '/data?hub.table=attendance_list', {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "no-cors", // change to cors when publish to github
+        mode: "cors", // change to cors when publish to github
         cache: "no-cache",
         credentials: "include",
         headers: {

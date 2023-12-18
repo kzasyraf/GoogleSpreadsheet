@@ -13,17 +13,18 @@
         switch(xhr.status) {
             case 200:
                 const authInfo = xhr.response;
-                console.log(authInfo);
+                console.log('XMLHttpRequest: ' + authInfo);
                 if(xhr.readyState === 4 && authInfo.status !== 201){
                     xhr.abort();
                     xhr.open('POST', apiUrl + '/data?hub.table=attendance_list');
-                    xhr.withCredentials = true;
-                    xhr.setRequestHeader('Authorization', `${authInfo.token_type} ${authInfo.access_token}`);
-                    xhr.send({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() });
+                    //xhr.withCredentials = true;
+                    //xhr.setRequestHeader('Authorization', `${authInfo.token_type} ${authInfo.access_token}`);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.send(JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() }));
                 }
                 break;
             default:
-                alert('Error: ' + xhr.status);
+                console.log('Error: ' + xhr.status);
                 break;
         }
     };
