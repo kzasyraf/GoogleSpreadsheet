@@ -7,7 +7,7 @@
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-            Accept: 'application/json',
+            Accept: 'application/json'
         },
         redirect: 'follow',
     })
@@ -16,20 +16,35 @@
 
     console.log('fetch: ' + authInfo);
     
-    const post = await fetch(apiUrl + '/data?hub.table=attendance_list', {
+    const postData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // change to cors when publish to github
+        mode: 'no-cors', // change to cors when publish to github
         cache: 'no-cache',
         credentials: 'include',
         headers: {
             Authorization: `${authInfo.token_type} ${authInfo.access_token}`,
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'text/plain'
         },
         redirect: 'follow',
         keepalive: true,
+        referrer: apiUrl,
+        referrerPolicy: 'origin-when-cross-origin',
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
     })
-    .then(d => d.type)
+    .then(d => d.json())
     .catch(e => console.log(e));
+    console.log(postData);
+
+    const getData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+            Accept: 'application/json'
+        },
+        redirect: 'follow',
+    })
+    .then(d => d.json())
+    .catch(e => console.log(e));
+
 })();
