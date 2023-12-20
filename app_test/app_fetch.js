@@ -1,6 +1,6 @@
 (async () => {
     'use strict'
-    const deploymentId = 'AKfycbxDmRJSC3dyP1SkWdd2Tq5ubi72Z1hy0w2DZJZeX-_OD8W3FRy39nE5q76R7SisFPVb';
+    const deploymentId = 'AKfycbyGUbPuEy7B1q2ijK_gdspMYPyPy4NAa25jdcC5UFqHGDjdhs7eEwQmbsBHDZhTfrfZ';
     const apiUrl = 'https://script.google.com/macros/s/' + deploymentId + '/exec'
 
     const authInfo = await fetch(apiUrl + '?hub.mode=publish&hub.verify_token=a136e25f-1cb8-4d1c-af73-142c678398d0', {
@@ -11,18 +11,17 @@
         },
         redirect: 'follow',
     })
-    .then(d => d.json())
-    .catch(e => console.log(e));
+    .then(d => d.json());
 
     console.log('fetch: ' + authInfo);
     
-    const postData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
+    await fetch(apiUrl + '?hub.mode=data&hub.table=attendance_list&hub.resource_token=' + encodeURIComponent(authInfo['token']), {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // change to cors when publish to github
         cache: 'no-cache',
-        credentials: 'include',
+        //credentials: 'include',
         headers: {
-            Authorization: `${authInfo.token_type} ${authInfo.access_token}`,
+            //Authorization: `${authInfo.token_type} ${authInfo.access_token}`,
             Accept: 'application/json',
             'Content-Type': 'text/plain'
         },
@@ -32,24 +31,28 @@
         referrerPolicy: 'origin-when-cross-origin',
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
     })
+    .then(d => (d.type !== 'opaque') ? d.json() : null)
     .then(d => {
-        const appId = document.getElementById('outputPost').innerHTML = '<p>' + d.type +'</p>';
-    }).catch(e => {
-        const appId = document.getElementById('errorPost').innerHTML = '<p>' + e +'</p>';
+        const postId = document.getElementById('fetchPost');
+        (d) ? postId.innerHTML = '<p>' + JSON.stringify(d) +'</p>' : '';
     });
 
-    const getData = await fetch(apiUrl + '/data?hub.table=attendance_list', {
+    await fetch(apiUrl + '?hub.mode=data&hub.table=attendance_list&hub.resource_token=' + encodeURIComponent(authInfo['token']), {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
             Accept: 'application/json'
         },
         redirect: 'follow',
+        keepalive: true,
+        referrer: apiUrl,
+        referrerPolicy: 'origin-when-cross-origin',
     })
+    .then(d => (d.type !== 'opaque') ? d.json() : null)
     .then(d => {
-        const appId = document.getElementById('outputGet').innerHTML = '<p>' + d.type +'</p>';
-    }).catch(e => {
-        const appId = document.getElementById('errorGet').innerHTML = '<p>' + e +'</p>';
+        console.log(d);
+        const getId = document.getElementById('fetchGet');
+        (d) ? getId.innerHTML = '<p>' + JSON.stringify(d) +'</p>' : '';
     });
 
 })();
