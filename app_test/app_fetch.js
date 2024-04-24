@@ -54,5 +54,5 @@
         const getId = document.getElementById('fetchGet');
         (d) ? getId.innerHTML = '<p>' + JSON.stringify(d) +'</p>' : '';
     });
-
+    console.log('Hello');
 })();
