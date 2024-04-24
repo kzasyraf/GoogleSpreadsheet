@@ -11,10 +11,10 @@
         },
         redirect: 'follow',
     })
-    .then(d => d.json());
+        .then(d => d.json());
 
     console.log('fetch: ' + authInfo);
-    
+
     await fetch(apiUrl + '?hub.mode=data&hub.table=attendance_list&hub.resource_token=' + encodeURIComponent(authInfo['token']), {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // change to cors when publish to github
@@ -31,11 +31,11 @@
         referrerPolicy: 'origin-when-cross-origin',
         body: JSON.stringify({ name: 'Hello', attendance: 'attending', wished: (new Date()).toISOString() })
     })
-    .then(d => (d.type !== 'opaque') ? d.json() : null)
-    .then(d => {
-        const postId = document.getElementById('fetchPost');
-        (d) ? postId.innerHTML = '<p>' + JSON.stringify(d) +'</p>' : '';
-    });
+        .then(d => (d.type !== 'opaque') ? d.json() : null)
+        .then(d => {
+            const postId = document.getElementById('fetchPost');
+            (d) ? postId.innerHTML = '<p>' + JSON.stringify(d) + '</p>' : '';
+        });
 
     await fetch(apiUrl + '?hub.mode=data&hub.table=attendance_list&hub.resource_token=' + encodeURIComponent(authInfo['token']), {
         mode: 'cors',
@@ -48,12 +48,11 @@
         referrer: apiUrl,
         referrerPolicy: 'origin-when-cross-origin',
     })
-    .then(d => (d.type !== 'opaque') ? d.json() : null)
-    .then(d => {
-        console.log(d);
-        const getId = document.getElementById('fetchGet');
-        (d) ? getId.innerHTML = '<p>' + JSON.stringify(d) +'</p>' : '';
-    });
+        .then(d => (d.type !== 'opaque') ? d.json() : null)
+        .then(d => {
+            console.log(d);
+            const getId = document.getElementById('fetchGet');
+            (d) ? getId.innerHTML = '<p>' + JSON.stringify(d) + '</p>' : '';
+        });
 
-    
 })();
