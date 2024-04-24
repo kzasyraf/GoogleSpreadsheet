@@ -16,10 +16,11 @@
             keepalive: true,
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         })
-        .then(d => (d.ok || d.redirected) ? d.json() : '')
-        .then(d => (d.status === 201) ? true : false);
+            .then(d => (d.ok || d.redirected) ? d.json() : '')
+            .then(d => (d.status === 201) ? true : false);
         return response;
     };
+    console.log("Hello World!");
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
@@ -33,7 +34,7 @@
 
         elementModal.addEventListener('show.bs.modal', event => {
             const listBody = elementModal.querySelectorAll('.list-unstyled');
-            if(inputAttendance.value !== 'attending') {
+            if (inputAttendance.value !== 'attending') {
                 listBody.forEach((e) => {
                     e.remove();
                 });
@@ -48,7 +49,7 @@
         const inputSubmitText = document.getElementById(`${form.id}_submit_text`);
 
         BalloonEditor.create(inputWished, {
-            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ],
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
             heading: {
                 options: [
                     { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -57,14 +58,14 @@
                 ]
             },
             isReadOnly: false
-        }).then( editor => {
+        }).then(editor => {
             inputWished = editor
-        }).catch( error => {
-            console.error( error );
+        }).catch(error => {
+            console.error(error);
         });
 
-        inputSubmit.addEventListener('click', event =>{
-            if(form.checkValidity()) {
+        inputSubmit.addEventListener('click', event => {
+            if (form.checkValidity()) {
                 event.preventDefault();
                 inputName.disabled = true;
                 inputAttendance.disabled = true;
@@ -77,24 +78,24 @@
                     attendance: inputAttendance.value,
                     wished: inputWished.getData()
                 })
-                .then(d => {
-                    if(d === false || d === undefined){
-                        bootstrapToast.show();
-                        inputName.disabled = false;
-                        inputAttendance.disabled = false;
-                        inputWished.disableReadOnlyMode('my-feature-id');
-                        inputSubmit.disabled = false;
-                        inputSubmitSpinner.classList.add('d-none');
-                        inputSubmitText.innerText = 'Hantar';
-                    } else {
-                        bootstrapModal.show(inputSubmit);
-                    }
-                });
+                    .then(d => {
+                        if (d === false || d === undefined) {
+                            bootstrapToast.show();
+                            inputName.disabled = false;
+                            inputAttendance.disabled = false;
+                            inputWished.disableReadOnlyMode('my-feature-id');
+                            inputSubmit.disabled = false;
+                            inputSubmitSpinner.classList.add('d-none');
+                            inputSubmitText.innerText = 'Hantar';
+                        } else {
+                            bootstrapModal.show(inputSubmit);
+                        }
+                    });
             }
         }, false);
 
         form.addEventListener('submit', event => {
-            if(!form.checkValidity()) {
+            if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
             }
@@ -103,7 +104,7 @@
 
         const inputClose = document.getElementById(`${form.id}_modal_close`);
         inputClose.addEventListener('click', event => {
-            if(form.checkValidity()) {
+            if (form.checkValidity()) {
                 event.preventDefault();
                 inputSubmitSpinner.classList.remove('d-none');
                 inputSubmitText.innerText = 'Hantar';
